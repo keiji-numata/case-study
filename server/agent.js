@@ -77,12 +77,14 @@ const toolHandlers = {
 }
 
 async function handleChat(messages, onChunk) {
+  const cleanMessages = messages.map(m => ({ role: m.role, content: m.content }))
+
   const response = await client.messages.create({
     model: 'claude-sonnet-4-5',
     max_tokens: 1024,
     system: SYSTEM_PROMPT,
     tools: TOOLS,
-    messages
+    messages: cleanMessages
   })
 
   if (response.stop_reason === 'tool_use') {
@@ -106,7 +108,7 @@ async function handleChat(messages, onChunk) {
       system: SYSTEM_PROMPT,
       tools: TOOLS,
       messages: [
-        ...messages,
+        ...cleanMessages,
         { role: 'assistant', content: response.content },
         { role: 'user', content: toolResults }
       ]

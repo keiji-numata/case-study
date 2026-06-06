@@ -8,6 +8,8 @@ app.use(cors({ origin: 'http://localhost:3000' }))
 app.use(express.json())
 
 app.post('/api/chat', async (req, res) => {
+  console.log('Chat endpoint hit, messages:', req.body.messages?.length)
+
   const { messages } = req.body
 
   res.setHeader('Content-Type', 'text/event-stream')
@@ -15,9 +17,12 @@ app.post('/api/chat', async (req, res) => {
   res.setHeader('Connection', 'keep-alive')
 
   try {
+    console.log('Calling handleChat...')
     await handleChat(messages, (chunk) => {
-      res.write(`data: ${JSON.stringify(chunk)}\n\n`)
+        console.log('Chunk received:', chunk.type)
+        res.write(`data: ${JSON.stringify(chunk)}\n\n`)
     })
+    console.log('handleChat complete')
     res.write('data: [DONE]\n\n')
     res.end()
   } catch (err) {
