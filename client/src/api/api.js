@@ -27,7 +27,10 @@ export const getAIMessage = async (userQuery, conversationHistory, onChunk) => {
       if (!line.startsWith('data: ') || line === 'data: [DONE]') continue
       const chunk = JSON.parse(line.slice(6))
 
-      if (chunk.type === 'text') finalText = chunk.text
+      if (chunk.type === 'text_delta') {
+        finalText += chunk.text
+        onChunk({ type: 'text_delta', text: chunk.text })
+      }
       if (chunk.type === 'tool_use') onChunk({ type: 'tool_use', tool: chunk.tool })
       if (chunk.type === 'parts_data') partsData = chunk.data
     }

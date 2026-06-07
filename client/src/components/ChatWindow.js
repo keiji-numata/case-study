@@ -11,19 +11,26 @@ const SEARCHING_LABELS = {
 }
 
 function ProductCard({ part }) {
-  if (!part || !part[0]) return null
-  const p = part[0]
+  console.log('Rendering card for part:', part)
+  if (!part) return null
   return (
     <div className="product-card">
-      {p.image_url && <img src={p.image_url} alt={p.name} />}
+      {part.image_url
+        ? <img src={part.image_url} alt={part.name} />
+        : <div className="product-card-no-image">No image available</div>
+      }
       <div className="product-card-info">
-        <span className="product-part-number">{p.part_number}</span>
-        <span className="product-name">{p.name}</span>
-        {p.price && <span className="product-price">${p.price}</span>}
+        <span className="product-part-number">{part.part_number}</span>
+        <span className="product-name">{part.name}</span>
+        {part.price
+          ? <span className="product-price">${part.price}</span>
+          : <span className="product-price">Check site for price</span>
+        }
       </div>
+      
       <a
         className="product-card-button"
-        href={`https://www.partselect.com/PS${p.part_number}-Part.htm`}
+        href={`https://www.partselect.com/${part.part_number}-Part.htm`}
         target="_blank"
         rel="noreferrer"
       >
@@ -50,39 +57,67 @@ function ChatWindow() {
   }, [messages, statusLabel])
 
   const handleSend = async () => {
-    if (input.trim() === '' || isLoading) return
+  if (input.trim() === '' || isLoading) return
 
-    const userInput = input
-    setInput('')
-    setIsLoading(true)
-    setStatusLabel('')
+  const userInput = input
+  setInput('')
+  setIsLoading(true)
+  setStatusLabel('')
 
-    const updatedMessages = [...messages, { role: 'user', content: userInput }]
-    setMessages(updatedMessages)
+  const updatedMessages = [...messages, { role: 'user', content: userInput }]
+  setMessages(updatedMessages)
 
-    try {
-      const response = await getAIMessage(
-        userInput,
-        messages,
-        (chunk) => {
-          if (chunk.type === 'tool_use') {
-            setStatusLabel(SEARCHING_LABELS[chunk.tool] ?? 'Thinking...')
-          }
+  // Add an empty assistant message that we'll stream into
+  setMessages(prev => [...prev, { role: 'assistant', content: '', partsData: null }])
+
+  try {
+    let streamedText = ''
+
+    const response = await getAIMessage(
+      userInput,
+      messages,
+      (chunk) => {
+        if (chunk.type === 'tool_use') {
+          setStatusLabel(SEARCHING_LABELS[chunk.tool] ?? 'Thinking...')
         }
-      )
+        if (chunk.type === 'text_delta') {
+          streamedText += chunk.text
+          // Update the last message in place as tokens arrive
+          setMessages(prev => {
+            const updated = [...prev]
+            updated[updated.length - 1] = {
+              role: 'assistant',
+              content: streamedText,
+              partsData: null
+            }
+            return updated
+          })
+        }
+      }
+    )
 
-      setStatusLabel('')
-      setMessages(prev => [...prev, response])
-    } catch (err) {
-      setStatusLabel('')
-      setMessages(prev => [...prev, {
+    // Final update with parts data
+    setStatusLabel('')
+    setMessages(prev => {
+      const updated = [...prev]
+      updated[updated.length - 1] = response
+      return updated
+    })
+
+  } catch (err) {
+    setStatusLabel('')
+    setMessages(prev => {
+      const updated = [...prev]
+      updated[updated.length - 1] = {
         role: 'assistant',
         content: 'Something went wrong. Please try again.'
-      }])
-    } finally {
-      setIsLoading(false)
-    }
+      }
+      return updated
+    })
+  } finally {
+    setIsLoading(false)
   }
+}
 
   return (
     <div className="messages-container">

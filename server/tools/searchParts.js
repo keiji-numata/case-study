@@ -13,8 +13,8 @@ const searchParts = async ({ query, category }) => {
   // Vector similarity search against the parts table
   const { data, error } = await supabase.rpc('match_parts', {
     query_embedding: embedding,
-    match_threshold: 0.5,
-    match_count: 5,
+    match_threshold: 0.35,
+    match_count: 3,
     filter_category: category === 'both' ? null : category
   })
 

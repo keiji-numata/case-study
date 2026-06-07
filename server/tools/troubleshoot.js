@@ -12,8 +12,8 @@ const troubleshoot = async ({ appliance, symptom }) => {
 
   const { data, error } = await supabase.rpc('match_parts', {
     query_embedding: embedding,
-    match_threshold: 0.4,
-    match_count: 4,
+    match_threshold: 0.35,
+    match_count: 3,
     filter_category: appliance
   })
 
