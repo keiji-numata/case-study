@@ -1,25 +1,55 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;600;700&display=swap");
 
-* {
-  font-family: "Inter", sans-serif;
-  font-size: 14px;
+/* PartSelect-inspired palette */
+:root {
+  --ps-teal: #2d7071;
+  --ps-teal-dark: #245a5b;
+  --ps-teal-header: #30736c;
+  --ps-yellow-cta: #f7b64b;
+  --ps-orange-logo: #e8890c;
+  --ps-bubble-assistant: #e8f1f0;
+  --ps-input-footer: #f5f5f5;
+  --ps-text: #1a1a1a;
+  --ps-text-muted: #5c5c5c;
+  --ps-link: #2d7071;
+  --ps-white: #ffffff;
+  --ps-border: #d4d4d4;
+  --ps-in-stock: #1e7a3a;
+  --chat-thread-max: 880px;
+  --chat-thread-padding-x: clamp(1.25rem, 4vw, 2rem);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  height: 100%;
+}
+
+body {
+  font-family: "Source Sans 3", system-ui, -apple-system, "Segoe UI", Roboto,
+    Arial, sans-serif;
+  font-size: 17px;
+  color: var(--ps-text);
+  background: var(--ps-white);
+  line-height: 1.5;
 }
 
 .App {
-  background-color: white;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
-.heading {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  background: rgba(255, 255, 255); 
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-  display: flex;
-  font-weight: 700;
-  font-size: 16px;
-  justify-content: center;
-  align-items: center;
-  height: 60px;
+.App > * {
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
 }
