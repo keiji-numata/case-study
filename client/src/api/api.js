@@ -1,4 +1,4 @@
-const SERVER_URL = 'http://localhost:3001'
+const SERVER_URL = process.env.REACT_APP_SERVER_URL || 'http://localhost:3001'
 
 export const getAIMessage = async (userQuery, conversationHistory, onChunk) => {
   const messages = [
