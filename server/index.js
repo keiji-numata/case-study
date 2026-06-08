@@ -4,7 +4,12 @@ const cors = require('cors')
 const { handleChat } = require('./agent')
 
 const app = express()
-app.use(cors({ origin: 'http://localhost:3000' }))
+app.use(cors({
+  origin: [
+    'http://localhost:3000',
+    'https://case-study-nine-lovat.vercel.app'
+  ]
+}))
 app.use(express.json())
 
 app.post('/api/chat', async (req, res) => {
