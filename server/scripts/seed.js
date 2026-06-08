@@ -93,14 +93,6 @@ async function generateEmbedding(text) {
 async function insertPart(part) {
   const embeddingText = `${part.name} ${part.description} ${part.category} part number ${part.partNumber}`
   const embedding = await generateEmbedding(embeddingText)
-  console.log('Attempting insert with URL:', process.env.SUPABASE_URL)
-
-    const { data: testData, error: testError } = await supabase
-        .from('parts')
-        .select('count')
-
-    console.log('Test query:', testData, testError)
-
 
     const { data, error: partError } = await supabase
     .from('parts')
@@ -113,11 +105,7 @@ async function insertPart(part) {
         image_url: part.imageUrl,
         install_instructions: part.installInstructions,
         embedding
-    })
-  
-  console.log('Insert data:', data)
-  console.log('Full error:', JSON.stringify(partError, null, 2))
-  
+    })  
 
   if (partError) {
     console.log(`  ✗ DB error for ${part.partNumber}: ${partError.message}`)
@@ -159,5 +147,4 @@ async function seed() {
 
   console.log('\nSeed complete.')
 }
-
 seed().catch(console.error)
