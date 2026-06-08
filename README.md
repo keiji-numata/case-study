@@ -4,7 +4,7 @@ A full-stack AI chat agent for PartSelect built as part of the Instalily AI case
 
 ## Demo
 
-[Live Demo]https://case-study-nine-lovat.vercel.app/ · [Loom Walkthrough](your-loom-url-here)
+[Live Demo]https://case-study-nine-lovat.vercel.app/ · [Loom Walkthrough]https://www.loom.com/share/5c9b5e86810141a0b17560869620cf2b
 
 ## Tech Stack
 
