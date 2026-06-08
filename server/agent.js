@@ -2,6 +2,7 @@ const Anthropic = require('@anthropic-ai/sdk')
 const { searchParts } = require('./tools/searchParts')
 const { checkCompatibility } = require('./tools/checkCompatibility')
 const { getPartDetails } = require('./tools/getPartDetails')
+const { getOrderStatus } = require('./tools/getOrderStatus')
 const { troubleshoot } = require('./tools/troubleshoot')
 
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
@@ -71,6 +72,20 @@ const TOOLS = [
       },
       required: ['appliance', 'symptom']
     }
+  },
+  {
+    name: 'get_order_status',
+    description: 'Check the status of a customer order by order number',
+    input_schema: {
+      type: 'object',
+      properties: {
+        order_number: {
+          type: 'string',
+          description: 'The order number e.g. ORD-123456'
+        }
+      },
+      required: ['order_number']
+    }
   }
 ]
 
@@ -78,7 +93,8 @@ const toolHandlers = {
   search_parts: searchParts,
   check_compatibility: checkCompatibility,
   get_part_details: getPartDetails,
-  troubleshoot: troubleshoot
+  troubleshoot: troubleshoot,
+  get_order_status: getOrderStatus
 }
 
 async function handleChat(messages, onChunk) {

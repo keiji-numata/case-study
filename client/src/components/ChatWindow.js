@@ -10,6 +10,7 @@ const SEARCHING_LABELS = {
   check_compatibility: "Checking compatibility…",
   get_part_details: "Fetching part details…",
   troubleshoot: "Looking up troubleshooting steps…",
+  get_order_status: "Checking order status…",
 };
 
 function formatTime(d = new Date()) {
