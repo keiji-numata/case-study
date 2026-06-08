@@ -205,7 +205,10 @@ function ChatWindow() {
     () => sessions.find((s) => s.id === activeId) ?? sessions[0],
     [sessions, activeId]
   );
-  const messages = activeSession?.messages ?? [];
+  const messages = useMemo(
+    () => activeSession?.messages ?? [],
+    [activeSession]
+  );
 
   useEffect(() => {
     const t = setTimeout(() => {
@@ -221,7 +224,6 @@ function ChatWindow() {
     return () => clearTimeout(t);
   }, [activeId, sessions]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, statusLabel, activeId]);
