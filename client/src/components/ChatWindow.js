@@ -221,6 +221,7 @@ function ChatWindow() {
     return () => clearTimeout(t);
   }, [activeId, sessions]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, statusLabel, activeId]);
